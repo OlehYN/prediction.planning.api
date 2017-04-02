@@ -18,7 +18,7 @@ public class Group {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "group_id")
-	private Long id;
+	private Long groupId;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
@@ -29,12 +29,12 @@ public class Group {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
 	private List<User> users;
 
-	public Long getId() {
-		return id;
+	public Long getGroupId() {
+		return groupId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
 	}
 
 	public String getName() {
@@ -65,7 +65,7 @@ public class Group {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
 		return result;
 	}
 
@@ -78,17 +78,17 @@ public class Group {
 		if (getClass() != obj.getClass())
 			return false;
 		Group other = (Group) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (groupId == null) {
+			if (other.groupId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!groupId.equals(other.groupId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", name=" + name + ", description=" + description + "]";
+		return "Group [id=" + groupId + ", name=" + name + ", description=" + description + "]";
 	}
 
 }

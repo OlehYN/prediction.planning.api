@@ -20,8 +20,9 @@ import com.course.work.prediction.planning.api.entity.User;
 import com.course.work.prediction.planning.api.service.domain.UserService;
 import com.eaio.uuid.UUID;
 
-public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorAdapter  {
+public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorAdapter {
 
+	@Autowired
 	private Map<String, TokenInfo> tokens;
 
 	private Map<String, GroupEnum[]> availablePathes;
@@ -34,13 +35,22 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 
 	@PostConstruct
 	public void pathes() {
-		tokens = new HashMap<>();
+		
+		TokenInfo tokenInfo = new TokenInfo();
+		tokenInfo.setExpiretionDate(new Date(System.currentTimeMillis() + System.currentTimeMillis()));
+		tokenInfo.setGroupEnum(GroupEnum.PREMIUM_USER);
+		tokenInfo.setUserId(4L);
+		
+		tokens.put("228", tokenInfo);
 		
 		availablePathes = new HashMap<>();
 
+		availablePathes.put("/", new GroupEnum[] {});
 		availablePathes.put("/login", new GroupEnum[] {});
 		availablePathes.put("/logout", new GroupEnum[] {});
 		availablePathes.put("/predict", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/createModel", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/list", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
 	}
 
 	private Integer duration = 3 * 24 * 60 * 60 * 1000;
@@ -55,6 +65,8 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 	}
 
 	private boolean isValid(TokenInfo tokenInfo, GroupEnum[] pathes) {
+		if (tokenInfo == null)
+			return false;
 		if (pathes == null)
 			return false;
 		if (new Date(System.currentTimeMillis()).after(tokenInfo.getExpiretionDate()))
@@ -95,7 +107,7 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 			}
 
 			User user = userService.findByName(login);
-			
+
 			if (user == null || !bCryptPasswordEncoder.matches(password, user.getPassword())) {
 				response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
 				return false;
@@ -104,7 +116,8 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 			UUID uuid = new UUID();
 			Date expirationDate = new Date(System.currentTimeMillis() + duration);
 
-			TokenInfo tokenInfo = new TokenInfo(expirationDate, getByValue(user.getGroup().getName()));
+			TokenInfo tokenInfo = new TokenInfo(expirationDate, getByValue(user.getGroup().getName()),
+					user.getUserId());
 			tokens.put(uuid.toString(), tokenInfo);
 			response.getWriter().write(uuid.toString());
 

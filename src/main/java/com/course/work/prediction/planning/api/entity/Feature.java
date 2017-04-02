@@ -20,7 +20,7 @@ public class Feature {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "feature_id")
-	private Long id;
+	private Long featureId;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
@@ -32,18 +32,18 @@ public class Feature {
 	@JoinColumn(name = "model_id", nullable = false)
 	private Model featureModel;
 
-	@Column(name = "available_order", nullable = false)
-	private Integer availableOrder;
+	@Column(name = "feature_order", nullable = false)
+	private Integer order;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "featureListValueFeature")
 	private List<FeatureListValue> featureListValues;
 
-	public Long getId() {
-		return id;
+	public Long getFeatureId() {
+		return featureId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setFeatureId(Long id) {
+		this.featureId = id;
 	}
 
 	public String getName() {
@@ -78,19 +78,19 @@ public class Feature {
 		this.featureModel = featureModel;
 	}
 
-	public Integer getAvailableOrder() {
-		return availableOrder;
+	public Integer getOrder() {
+		return order;
 	}
 
-	public void setAvailableOrder(Integer availableOrder) {
-		this.availableOrder = availableOrder;
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((featureId == null) ? 0 : featureId.hashCode());
 		return result;
 	}
 
@@ -103,18 +103,18 @@ public class Feature {
 		if (getClass() != obj.getClass())
 			return false;
 		Feature other = (Feature) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (featureId == null) {
+			if (other.featureId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!featureId.equals(other.featureId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Feature [id=" + id + ", name=" + name + ", isCategory=" + isCategory + ", availableOrder="
-				+ availableOrder + "]";
+		return "Feature [id=" + featureId + ", name=" + name + ", isCategory=" + isCategory + ", availableOrder="
+				+ order + "]";
 	}
 
 }

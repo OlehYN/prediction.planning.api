@@ -17,7 +17,7 @@ public class FeatureListValue {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "feature_list_value_id")
-	private Long id;
+	private Long featureListValueId;
 
 	@Column(name = "name", nullable = false, length = 100)
 	private String value;
@@ -26,12 +26,12 @@ public class FeatureListValue {
 	@JoinColumn(name = "feature_id", nullable = false)
 	private Feature featureListValueFeature;
 
-	public Long getId() {
-		return id;
+	public Long getFeatureListValueId() {
+		return featureListValueId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setFeatureListValueId(Long featureListValueId) {
+		this.featureListValueId = featureListValueId;
 	}
 
 	public String getValue() {
@@ -54,7 +54,7 @@ public class FeatureListValue {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((featureListValueId == null) ? 0 : featureListValueId.hashCode());
 		return result;
 	}
 
@@ -67,17 +67,17 @@ public class FeatureListValue {
 		if (getClass() != obj.getClass())
 			return false;
 		FeatureListValue other = (FeatureListValue) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (featureListValueId == null) {
+			if (other.featureListValueId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!featureListValueId.equals(other.featureListValueId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "FeatureListValue [id=" + id + ", value=" + value + "]";
+		return "FeatureListValue [id=" + featureListValueId + ", value=" + value + "]";
 	}
 
 }

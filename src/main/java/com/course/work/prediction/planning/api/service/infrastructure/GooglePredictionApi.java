@@ -7,8 +7,8 @@ import com.course.work.prediction.planning.api.dto.TrainingInstanceDto;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Analyze;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Delete;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Get;
-import com.google.api.services.prediction.Prediction.Trainedmodels.Insert;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Update;
+import com.google.api.services.prediction.model.Insert2;
 import com.google.api.services.prediction.model.Output;
 
 public interface GooglePredictionApi {
@@ -20,9 +20,9 @@ public interface GooglePredictionApi {
 	
 	Get get(String projectName, String modelName) throws IOException;
 	
-	Insert insert(String projectName, String modelName) throws IOException;
+	Insert2 insert(String projectName, String modelName) throws IOException;
 	
-	Insert insert(String projectName, String modelName, List<TrainingInstanceDto> trainingInstances) throws IOException;
+	Insert2 insert(String projectName, String modelName, List<TrainingInstanceDto> trainingInstances) throws IOException;
 	
 	com.google.api.services.prediction.Prediction.Trainedmodels.List list(String projectName) throws IOException;
 	

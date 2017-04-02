@@ -19,6 +19,7 @@ import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.Input.InputInput;
 import com.google.api.services.prediction.model.Insert;
 import com.google.api.services.prediction.model.Insert.TrainingInstances;
+import com.google.api.services.prediction.model.Insert2;
 import com.google.api.services.prediction.model.Output;
 
 @Service
@@ -57,14 +58,13 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 	}
 
 	@Override
-	public com.google.api.services.prediction.Prediction.Trainedmodels.Insert insert(String projectName,
-			String modelName) throws IOException {
+	public Insert2 insert(String projectName, String modelName) throws IOException {
 		Insert insert = new Insert();
 		insert.setFactory(jsonFactory);
 		insert.setModelType("regression");
 		insert.setId(modelName);
 
-		return prediction.trainedmodels().insert(projectName, insert);
+		return prediction.trainedmodels().insert(projectName, insert).execute();
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 	}
 
 	@Override
-	public com.google.api.services.prediction.Prediction.Trainedmodels.Insert insert(String projectName,
+	public Insert2 insert(String projectName,
 			String modelName, List<TrainingInstanceDto> trainingInstanceDtos) throws IOException {
 		Insert insert = new Insert();
 		insert.setFactory(jsonFactory);
@@ -103,7 +103,7 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 		}
 
 		insert.setTrainingInstances(trainingInstances);
-		return prediction.trainedmodels().insert(projectName, insert);
+		return prediction.trainedmodels().insert(projectName, insert).execute();
 	}
 
 }

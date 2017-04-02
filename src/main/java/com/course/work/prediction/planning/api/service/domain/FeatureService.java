@@ -2,6 +2,7 @@ package com.course.work.prediction.planning.api.service.domain;
 
 import java.util.List;
 
+import com.course.work.prediction.planning.api.dto.CreateFeatureDto;
 import com.course.work.prediction.planning.api.entity.Feature;
 
 public interface FeatureService {
@@ -15,4 +16,5 @@ public interface FeatureService {
 
 	boolean delete(Long key);
 
+	Long createFeature(CreateFeatureDto createFeatureDto);
 }

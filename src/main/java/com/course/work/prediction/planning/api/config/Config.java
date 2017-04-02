@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -45,6 +48,16 @@ public class Config extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private ServletContext servletContext;
+	
+	@Bean
+	public Map<String, TokenInfo> tokens(){
+		return new HashMap<>();
+	}
+
+	@Bean
+	public String projectName() {
+		return (environment.getRequiredProperty("project.id"));
+	}
 
 	@Bean
 	public HttpTransport httpTransport() throws GeneralSecurityException, IOException {
@@ -92,17 +105,17 @@ public class Config extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public AuthentificationTokenHandlerInterceptor inteceptor() {
-	    return new AuthentificationTokenHandlerInterceptor();
+		return new AuthentificationTokenHandlerInterceptor();
 	}
-	
+
 	@Bean
-	public BeanNameUrlHandlerMapping mapping(){
+	public BeanNameUrlHandlerMapping mapping() {
 		return new BeanNameUrlHandlerMapping();
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-	    registry.addInterceptor(inteceptor()).addPathPatterns("/*");
+		registry.addInterceptor(inteceptor()).addPathPatterns("/*");
 	}
 
 	@Bean

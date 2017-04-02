@@ -22,7 +22,7 @@ public class Model {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "model_id")
-	private Long id;
+	private Long modelId;
 
 	@Column(name = "creation_date", nullable = false)
 	private Date creationDate;
@@ -32,6 +32,9 @@ public class Model {
 
 	@Column(name = "external_id", nullable = false, length = 100, unique = true)
 	private String externalId;
+
+	@Column(name = "available_order", nullable = false)
+	private Integer availableOrder;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -43,12 +46,12 @@ public class Model {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "exampleModel", cascade = CascadeType.ALL)
 	private List<Example> examples;
 
-	public Long getId() {
-		return id;
+	public Long getModelId() {
+		return modelId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setModelId(Long modelId) {
+		this.modelId = modelId;
 	}
 
 	public Date getCreationDate() {
@@ -73,6 +76,14 @@ public class Model {
 
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
+	}
+
+	public Integer getAvailableOrder() {
+		return availableOrder;
+	}
+
+	public void setAvailableOrder(Integer availableOrder) {
+		this.availableOrder = availableOrder;
 	}
 
 	public User getUser() {
@@ -103,7 +114,7 @@ public class Model {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((modelId == null) ? 0 : modelId.hashCode());
 		return result;
 	}
 
@@ -116,18 +127,18 @@ public class Model {
 		if (getClass() != obj.getClass())
 			return false;
 		Model other = (Model) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (modelId == null) {
+			if (other.modelId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!modelId.equals(other.modelId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Model [id=" + id + ", creationDate=" + creationDate + ", name=" + name + ", externalId=" + externalId
-				+ "]";
+		return "Model [modelId=" + modelId + ", creationDate=" + creationDate + ", name=" + name + ", externalId="
+				+ externalId + ", availableOrder=" + availableOrder + "]";
 	}
 
 }

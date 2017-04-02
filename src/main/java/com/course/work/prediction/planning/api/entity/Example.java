@@ -30,6 +30,9 @@ public class Example {
 	@Column(name = "creation_date", nullable = false)
 	private Date creationDate;
 
+	@Column(name = "used_in_prediction_api", nullable = false)
+	private boolean usedInPredictionApi;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "exampleInstanceExample", cascade = CascadeType.ALL)
 	private List<ExampleInstance> exampleInstances;
 
@@ -77,6 +80,14 @@ public class Example {
 		this.outputLabel = outputLabel;
 	}
 
+	public boolean isUsedInPredictionApi() {
+		return usedInPredictionApi;
+	}
+
+	public void setUsedInPredictionApi(boolean usedInPredictionApi) {
+		this.usedInPredictionApi = usedInPredictionApi;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -104,7 +115,8 @@ public class Example {
 
 	@Override
 	public String toString() {
-		return "Example [id=" + id + ", outputLabel=" + outputLabel + ", creationDate=" + creationDate + "]";
+		return "Example [id=" + id + ", outputLabel=" + outputLabel + ", creationDate=" + creationDate
+				+ ", usedInPredictionApi=" + usedInPredictionApi + ", exampleInstances=" + exampleInstances + "]";
 	}
 
 }

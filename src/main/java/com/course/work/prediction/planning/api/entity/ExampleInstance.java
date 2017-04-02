@@ -17,7 +17,7 @@ public class ExampleInstance {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "example_instance_id")
-	private Long id;
+	private Long exampleInstanceId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "feature_id", nullable = false)
@@ -34,12 +34,12 @@ public class ExampleInstance {
 	@JoinColumn(name = "example_id", nullable = false)
 	private Example exampleInstanceExample;
 
-	public Long getId() {
-		return id;
+	public Long getExampleInstanceId() {
+		return exampleInstanceId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setExampleInstanceId(Long exampleInstanceId) {
+		this.exampleInstanceId = exampleInstanceId;
 	}
 
 	public Feature getExampleInstanceFeature() {
@@ -78,7 +78,7 @@ public class ExampleInstance {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((exampleInstanceId == null) ? 0 : exampleInstanceId.hashCode());
 		return result;
 	}
 
@@ -91,17 +91,17 @@ public class ExampleInstance {
 		if (getClass() != obj.getClass())
 			return false;
 		ExampleInstance other = (ExampleInstance) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (exampleInstanceId == null) {
+			if (other.exampleInstanceId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!exampleInstanceId.equals(other.exampleInstanceId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ExampleInstance [id=" + id + ", exampleInstanceFeature=" + exampleInstanceFeature + ", value=" + value
+		return "ExampleInstance [id=" + exampleInstanceId + ", exampleInstanceFeature=" + exampleInstanceFeature + ", value=" + value
 				+ ", exampleInstanceFeatureListValue=" + exampleInstanceFeatureListValue + "]";
 	}
 
