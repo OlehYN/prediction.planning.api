@@ -22,13 +22,13 @@ public class ModelServiceImpl implements ModelService {
 
 	@Autowired
 	private ModelDao modelDao;
-	
+
 	@Autowired
 	private String projectName;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private GooglePredictionApi googlePredictionApi;
 
@@ -53,25 +53,36 @@ public class ModelServiceImpl implements ModelService {
 	}
 
 	@Override
-	public boolean delete(Long key) {
+	public boolean delete(Long key) throws IOException {
+
+		Integer statusCode = googlePredictionApi.delete(projectName,
+				modelDao.read(key).getUser().getLogin() + "#" + modelDao.read(key).getName());
+
+		if (statusCode != 204)
+			throw new InternalError();
+
 		return modelDao.delete(key);
 	}
 
 	@Override
 	public Model create(String name, Long userId) throws IOException {
 		User user = userService.read(userId);
-		
+
 		Model model = new Model();
 		model.setAvailableOrder(0);
 		model.setCreationDate(new Date());
 		model.setExternalId(user.getLogin() + "#" + name);
 		model.setName(name);
 		model.setUser(user);
-		
+
 		modelDao.create(model);
-		
-		googlePredictionApi.insert(projectName, name);
-	
+
+		Integer statusCode = googlePredictionApi.insert(projectName,
+				model.getUser().getLogin() + "#" + model.getName());
+
+		if (statusCode != 200)
+			throw new InternalError();
+
 		return model;
 	}
 

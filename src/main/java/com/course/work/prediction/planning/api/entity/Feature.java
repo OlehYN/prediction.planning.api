@@ -1,7 +1,9 @@
 package com.course.work.prediction.planning.api.entity;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,7 +37,10 @@ public class Feature {
 	@Column(name = "feature_order", nullable = false)
 	private Integer order;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "featureListValueFeature")
+	@Column(name = "creation_date", nullable = false)
+	private Date creationDate;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "featureListValueFeature", cascade = CascadeType.ALL)
 	private List<FeatureListValue> featureListValues;
 
 	public Long getFeatureId() {
@@ -86,6 +91,14 @@ public class Feature {
 		this.order = order;
 	}
 
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,8 +126,8 @@ public class Feature {
 
 	@Override
 	public String toString() {
-		return "Feature [id=" + featureId + ", name=" + name + ", isCategory=" + isCategory + ", availableOrder="
-				+ order + "]";
+		return "Feature [featureId=" + featureId + ", name=" + name + ", isCategory=" + isCategory + ", order=" + order
+				+ ", creationDate=" + creationDate + "]";
 	}
 
 }

@@ -19,7 +19,6 @@ import com.google.api.services.prediction.model.Input;
 import com.google.api.services.prediction.model.Input.InputInput;
 import com.google.api.services.prediction.model.Insert;
 import com.google.api.services.prediction.model.Insert.TrainingInstances;
-import com.google.api.services.prediction.model.Insert2;
 import com.google.api.services.prediction.model.Output;
 
 @Service
@@ -48,8 +47,11 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 	}
 
 	@Override
-	public Delete delete(String projectName, String modelName) throws IOException {
-		return prediction.trainedmodels().delete(projectName, modelName);
+	public Integer delete(String projectName, String modelName) throws IOException {
+		Delete delete = prediction.trainedmodels().delete(projectName, modelName);
+		delete.execute();
+
+		return delete.getLastStatusCode();
 	}
 
 	@Override
@@ -58,13 +60,16 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 	}
 
 	@Override
-	public Insert2 insert(String projectName, String modelName) throws IOException {
+	public Integer insert(String projectName, String modelName) throws IOException {
 		Insert insert = new Insert();
 		insert.setFactory(jsonFactory);
 		insert.setModelType("regression");
 		insert.setId(modelName);
 
-		return prediction.trainedmodels().insert(projectName, insert).execute();
+		com.google.api.services.prediction.Prediction.Trainedmodels.Insert insertPrediction = prediction.trainedmodels()
+				.insert(projectName, insert);
+		insertPrediction.execute();
+		return insertPrediction.getLastStatusCode();
 	}
 
 	@Override
@@ -74,19 +79,23 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 	}
 
 	@Override
-	public com.google.api.services.prediction.Prediction.Trainedmodels.Update update(String projectName,
-			String modelName, List<Object> exampleInstances, String outputLabel) throws IOException {
+	public Integer update(String projectName, String modelName, List<Object> exampleInstances, String outputLabel)
+			throws IOException {
 		Update update = new Update();
 		update.setCsvInstance(exampleInstances);
 		update.setOutput(outputLabel);
 		update.setFactory(jsonFactory);
 
-		return prediction.trainedmodels().update(projectName, modelName, update);
+		com.google.api.services.prediction.Prediction.Trainedmodels.Update updatePrediction = prediction.trainedmodels()
+				.update(projectName, modelName, update);
+		updatePrediction.execute();
+
+		return updatePrediction.getLastStatusCode();
 	}
 
 	@Override
-	public Insert2 insert(String projectName,
-			String modelName, List<TrainingInstanceDto> trainingInstanceDtos) throws IOException {
+	public Integer insert(String projectName, String modelName, List<TrainingInstanceDto> trainingInstanceDtos)
+			throws IOException {
 		Insert insert = new Insert();
 		insert.setFactory(jsonFactory);
 		insert.setModelType("regression");
@@ -103,7 +112,11 @@ public class GooglePredictionApiImpl implements GooglePredictionApi {
 		}
 
 		insert.setTrainingInstances(trainingInstances);
-		return prediction.trainedmodels().insert(projectName, insert).execute();
+
+		com.google.api.services.prediction.Prediction.Trainedmodels.Insert insertPrediction = prediction.trainedmodels()
+				.insert(projectName, insert);
+		insertPrediction.execute();
+		return insertPrediction.getLastStatusCode();
 	}
 
 }

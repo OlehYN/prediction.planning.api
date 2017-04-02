@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.course.work.prediction.planning.api.dto.TrainingInstanceDto;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Analyze;
-import com.google.api.services.prediction.Prediction.Trainedmodels.Delete;
 import com.google.api.services.prediction.Prediction.Trainedmodels.Get;
-import com.google.api.services.prediction.Prediction.Trainedmodels.Update;
-import com.google.api.services.prediction.model.Insert2;
 import com.google.api.services.prediction.model.Output;
 
 public interface GooglePredictionApi {
@@ -16,15 +13,15 @@ public interface GooglePredictionApi {
 	
 	Analyze analyze(String projectName, String modelName) throws IOException;
 	
-	Delete delete(String projectName, String modelName) throws IOException;
+	Integer delete(String projectName, String modelName) throws IOException;
 	
 	Get get(String projectName, String modelName) throws IOException;
 	
-	Insert2 insert(String projectName, String modelName) throws IOException;
+	Integer insert(String projectName, String modelName) throws IOException;
 	
-	Insert2 insert(String projectName, String modelName, List<TrainingInstanceDto> trainingInstances) throws IOException;
+	Integer insert(String projectName, String modelName, List<TrainingInstanceDto> trainingInstances) throws IOException;
 	
 	com.google.api.services.prediction.Prediction.Trainedmodels.List list(String projectName) throws IOException;
 	
-	Update update(String projectName, String modelName, List<Object> exampleInstances, String outputLabel) throws IOException;
+	Integer update(String projectName, String modelName, List<Object> exampleInstances, String outputLabel) throws IOException;
 }

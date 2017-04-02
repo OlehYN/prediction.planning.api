@@ -46,11 +46,21 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 		availablePathes = new HashMap<>();
 
 		availablePathes.put("/", new GroupEnum[] {});
+		availablePathes.put("/addExample", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/addFeatureValue", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/createFeature", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/createModel", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/deleteModel", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/examples", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });		
+		availablePathes.put("/features", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/list", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
 		availablePathes.put("/login", new GroupEnum[] {});
 		availablePathes.put("/logout", new GroupEnum[] {});
 		availablePathes.put("/predict", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
-		availablePathes.put("/createModel", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
-		availablePathes.put("/list", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/removeExample", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/renameFeature", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		availablePathes.put("/updateModel", new GroupEnum[] { GroupEnum.FREE_USER, GroupEnum.PREMIUM_USER });
+		
 	}
 
 	private Integer duration = 3 * 24 * 60 * 60 * 1000;
@@ -102,14 +112,14 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 			String password = request.getParameter("password");
 
 			if (login == null || password == null) {
-				response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				return false;
 			}
 
 			User user = userService.findByName(login);
 
 			if (user == null || !bCryptPasswordEncoder.matches(password, user.getPassword())) {
-				response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				return false;
 			}
 
@@ -140,7 +150,7 @@ public class AuthentificationTokenHandlerInterceptor extends HandlerInterceptorA
 				return true;
 			else {
 				tokens.remove(token);
-				response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
+				response.setStatus(HttpStatus.UNAUTHORIZED.value());
 				return false;
 			}
 		}

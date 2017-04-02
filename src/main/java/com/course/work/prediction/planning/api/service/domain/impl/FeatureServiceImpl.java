@@ -1,6 +1,7 @@
 package com.course.work.prediction.planning.api.service.domain.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -59,6 +60,7 @@ public class FeatureServiceImpl implements FeatureService {
 		Feature feature = new Feature();
 		feature.setFeatureModel(model);
 		feature.setOrder(model.getAvailableOrder());
+		feature.setCreationDate(new Date());
 
 		model.setAvailableOrder(model.getAvailableOrder() + 1);
 
@@ -81,12 +83,34 @@ public class FeatureServiceImpl implements FeatureService {
 
 			feature.setFeatureListValues(featureListValues);
 		}
-		// TODO Auto-generated method stub
 
 		modelService.update(model);
 		featureDao.create(feature);
 
 		return feature.getFeatureId();
+	}
+
+	@Override
+	public void rename(Long featureId, String name) {
+		Feature feature = featureDao.read(featureId);
+		feature.setName(name);
+		featureDao.update(feature);
+	}
+
+	@Override
+	public void addFeatureValues(Long featureId, List<String> featureValues) {
+		Feature feature = featureDao.read(featureId);
+		List<FeatureListValue> listValues = feature.getFeatureListValues();
+
+		for (String name : featureValues) {
+			FeatureListValue featureListValue = new FeatureListValue();
+			featureListValue.setFeatureListValueFeature(feature);
+			featureListValue.setValue(name);
+
+			listValues.add(featureListValue);
+		}
+
+		featureDao.update(feature);
 	}
 
 }

@@ -14,7 +14,7 @@ public interface ModelService {
 
 	void update(Model obj);
 
-	boolean delete(Long key);
+	boolean delete(Long key) throws IOException;
 	
 	Model create(String name, Long userId) throws IOException;
 

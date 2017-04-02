@@ -22,7 +22,7 @@ public class Example {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "example_id")
-	private Long id;
+	private Long exampleId;
 
 	@Column(name = "output_label", nullable = false)
 	private Integer outputLabel;
@@ -38,14 +38,14 @@ public class Example {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "model_id", nullable = false)
-	private Group exampleModel;
+	private Model exampleModel;
 
-	public Long getId() {
-		return id;
+	public Long getExampleId() {
+		return exampleId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setExampleId(Long id) {
+		this.exampleId = id;
 	}
 
 	public Date getCreationDate() {
@@ -64,11 +64,11 @@ public class Example {
 		this.exampleInstances = exampleInstances;
 	}
 
-	public Group getExampleModel() {
+	public Model getExampleModel() {
 		return exampleModel;
 	}
 
-	public void setExampleModel(Group exampleModel) {
+	public void setExampleModel(Model exampleModel) {
 		this.exampleModel = exampleModel;
 	}
 
@@ -92,7 +92,7 @@ public class Example {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((exampleId == null) ? 0 : exampleId.hashCode());
 		return result;
 	}
 
@@ -105,17 +105,17 @@ public class Example {
 		if (getClass() != obj.getClass())
 			return false;
 		Example other = (Example) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (exampleId == null) {
+			if (other.exampleId != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!exampleId.equals(other.exampleId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Example [id=" + id + ", outputLabel=" + outputLabel + ", creationDate=" + creationDate
+		return "Example [id=" + exampleId + ", outputLabel=" + outputLabel + ", creationDate=" + creationDate
 				+ ", usedInPredictionApi=" + usedInPredictionApi + ", exampleInstances=" + exampleInstances + "]";
 	}
 

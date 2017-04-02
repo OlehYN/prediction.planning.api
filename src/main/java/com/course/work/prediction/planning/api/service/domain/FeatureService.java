@@ -17,4 +17,8 @@ public interface FeatureService {
 	boolean delete(Long key);
 
 	Long createFeature(CreateFeatureDto createFeatureDto);
+	
+	void rename(Long featureId, String name);
+	
+	void addFeatureValues(Long featureId, List<String> featureValues);
 }
