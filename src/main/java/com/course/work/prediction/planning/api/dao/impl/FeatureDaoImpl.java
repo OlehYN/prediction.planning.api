@@ -15,7 +15,7 @@ public class FeatureDaoImpl extends GenericDaoImpl<Feature, Long> implements Fea
 
 	@Override
 	protected String getEntityName() {
-		return "feature";
+		return "Feature";
 	}
 
 }

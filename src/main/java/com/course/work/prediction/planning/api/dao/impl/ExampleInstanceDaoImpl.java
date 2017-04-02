@@ -15,7 +15,7 @@ public class ExampleInstanceDaoImpl extends GenericDaoImpl<ExampleInstance, Long
 
 	@Override
 	protected String getEntityName() {
-		return "example_instance";
+		return "ExampleInstance";
 	}
 
 }

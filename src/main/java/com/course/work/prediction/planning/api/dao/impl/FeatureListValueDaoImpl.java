@@ -15,7 +15,7 @@ public class FeatureListValueDaoImpl extends GenericDaoImpl<FeatureListValue, Lo
 
 	@Override
 	protected String getEntityName() {
-		return "feature_list_value";
+		return "FeatureListValue";
 	}
 
 }

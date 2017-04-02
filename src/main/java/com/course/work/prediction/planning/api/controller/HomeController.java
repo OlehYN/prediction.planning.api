@@ -25,4 +25,16 @@ public class HomeController {
 		System.out.println(googlePredictionApi.predict("double-archive-160219", "language-identifier", features));
 		return "Test";
 	}
+	
+	@RequestMapping(value = "/logout")
+	@ResponseBody
+	public String logout() throws IOException {
+		return "Successfully logged out";
+	}
+	
+	@RequestMapping(value = "/login")
+	@ResponseBody
+	public String logint() throws IOException {
+		return "Successfully logged in";
+	}
 }

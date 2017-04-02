@@ -15,7 +15,7 @@ public class ModelDaoImpl extends GenericDaoImpl<Model, Long> implements ModelDa
 
 	@Override
 	protected String getEntityName() {
-		return "model";
+		return "Model";
 	}
 
 }

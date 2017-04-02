@@ -15,4 +15,5 @@ public interface UserService {
 
 	boolean delete(Long key);
 
+	User findByName(String name);
 }

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
@@ -19,8 +18,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -40,7 +42,7 @@ public class Config extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private Environment environment;
-	
+
 	@Autowired
 	private ServletContext servletContext;
 
@@ -53,15 +55,15 @@ public class Config extends WebMvcConfigurerAdapter {
 	public JsonFactory jsonFactory() {
 		return JacksonFactory.getDefaultInstance();
 	}
-	
+
 	@Bean
 	@Autowired
 	public GoogleCredential googleCredential(HttpTransport httpTransport, JsonFactory jsonFactory)
 			throws IllegalStateException, GeneralSecurityException, IOException {
 		return new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory)
 				.setServiceAccountId(environment.getRequiredProperty("service.account.email"))
-				.setServiceAccountPrivateKeyFromP12File(
-						new File(servletContext.getRealPath("") + "\\WEB-INF\\classes\\" + environment.getRequiredProperty("service.account.keyfile")))
+				.setServiceAccountPrivateKeyFromP12File(new File(servletContext.getRealPath("") + "\\WEB-INF\\classes\\"
+						+ environment.getRequiredProperty("service.account.keyfile")))
 				.setServiceAccountScopes(Arrays.asList(PredictionScopes.PREDICTION)).build();
 	}
 
@@ -77,10 +79,30 @@ public class Config extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	MappingJackson2HttpMessageConverter converter() {
+	public MappingJackson2HttpMessageConverter converter() {
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		converter.setPrettyPrint(true);
 		return converter;
+	}
+
+	@Bean
+	public BCryptPasswordEncoder encrypt() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public AuthentificationTokenHandlerInterceptor inteceptor() {
+	    return new AuthentificationTokenHandlerInterceptor();
+	}
+	
+	@Bean
+	public BeanNameUrlHandlerMapping mapping(){
+		return new BeanNameUrlHandlerMapping();
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+	    registry.addInterceptor(inteceptor()).addPathPatterns("/*");
 	}
 
 	@Bean

@@ -31,7 +31,7 @@ public class HibernateConfig {
 	@Autowired
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		vendorAdapter.setGenerateDdl(true);
+		vendorAdapter.setGenerateDdl(false);
 		vendorAdapter.setShowSql(true);
 		vendorAdapter.setDatabase(Database.POSTGRESQL);
 

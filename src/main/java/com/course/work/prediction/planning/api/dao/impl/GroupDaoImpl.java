@@ -15,7 +15,7 @@ public class GroupDaoImpl extends GenericDaoImpl<Group, Long> implements GroupDa
 
 	@Override
 	protected String getEntityName() {
-		return "group";
+		return "Group";
 	}
 
 }
