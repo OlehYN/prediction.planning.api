@@ -18,12 +18,15 @@ import com.course.work.prediction.planning.api.dto.CreateFeatureDto;
 import com.course.work.prediction.planning.api.dto.ExampleDto;
 import com.course.work.prediction.planning.api.dto.FeatureDto;
 import com.course.work.prediction.planning.api.dto.ModelInfoDto;
+import com.course.work.prediction.planning.api.dto.PredictExampleInstanceDto;
 import com.course.work.prediction.planning.api.dto.SuccessWrapper;
 import com.course.work.prediction.planning.api.entity.Model;
 import com.course.work.prediction.planning.api.service.application.AddExampleValidator;
 import com.course.work.prediction.planning.api.service.application.AddFeatureListValueValidator;
 import com.course.work.prediction.planning.api.service.application.CreateFeatureValidator;
 import com.course.work.prediction.planning.api.service.application.CreateModelValidator;
+import com.course.work.prediction.planning.api.service.application.PredictModelService;
+import com.course.work.prediction.planning.api.service.application.PredictValidator;
 import com.course.work.prediction.planning.api.service.application.RenameFeatureValidator;
 import com.course.work.prediction.planning.api.service.application.UpdateModelService;
 import com.course.work.prediction.planning.api.service.domain.ExampleService;
@@ -63,9 +66,15 @@ public class FreeUserController {
 
 	@Autowired
 	private AddExampleValidator addExampleValidator;
-	
+
 	@Autowired
 	private UpdateModelService updateModelService;
+
+	@Autowired
+	private PredictModelService predictModelService;
+
+	@Autowired
+	private PredictValidator predictValidator;
 
 	@RequestMapping("/list")
 	@ResponseBody
@@ -174,12 +183,23 @@ public class FreeUserController {
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Boolean>(exampleService.delete(id));
 	}
-	
+
 	@RequestMapping("/updateModel")
 	@ResponseBody
-	public SuccessWrapper<Boolean> updateModel(Long modelId, String token) throws IOException{
-		if(modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId())
+	public SuccessWrapper<Boolean> updateModel(Long modelId, String token) throws IOException {
+		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId())
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Boolean>(updateModelService.updateModel(modelId));
+	}
+
+	@RequestMapping("/predict")
+	@ResponseBody
+	public SuccessWrapper<Integer> predict(Long modelId, List<PredictExampleInstanceDto> instances, String token)
+			throws IOException {
+		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId()
+				|| !predictValidator.isValid(instances, modelId, token))
+
+			throw new IllegalAccessError("Illegal access!");
+		return new SuccessWrapper<Integer>(predictModelService.predict(instances, modelId));
 	}
 }
