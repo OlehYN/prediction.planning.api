@@ -35,6 +35,9 @@ public class AddExampleValidatorImpl implements AddExampleValidator {
 		Model model = modelService.read(addExampleDto.getModelId());
 
 		if (user.getUserId() != model.getUser().getUserId())
+			throw new IllegalAccessError();
+		
+		if(addExampleDto.getOutputLabel() == null || addExampleDto.getOutputLabel() <= 0)
 			return false;
 
 		List<Feature> features = model.getFeatures();

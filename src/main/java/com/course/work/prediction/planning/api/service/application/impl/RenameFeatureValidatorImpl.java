@@ -30,7 +30,7 @@ public class RenameFeatureValidatorImpl implements RenameFeatureValidator {
 		Feature feature = featureService.read(featureId);
 
 		if (feature.getFeatureModel().getUser().getUserId() != user.getUserId())
-			return false;
+			throw new IllegalAccessError();
 
 		if (name == null || name.length() == 0 || name.length() > 100)
 			return false;

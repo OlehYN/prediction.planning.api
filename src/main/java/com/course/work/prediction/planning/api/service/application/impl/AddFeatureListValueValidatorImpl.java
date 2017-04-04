@@ -32,7 +32,7 @@ public class AddFeatureListValueValidatorImpl implements AddFeatureListValueVali
 		Feature feature = featureService.read(featureId);
 
 		if (feature.getFeatureModel().getUser().getUserId() != user.getUserId())
-			return false;
+			throw new IllegalAccessError();
 
 		if (values == null || values.size() == 0)
 			return false;

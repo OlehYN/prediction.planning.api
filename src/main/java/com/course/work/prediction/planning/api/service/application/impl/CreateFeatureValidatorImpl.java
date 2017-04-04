@@ -41,7 +41,7 @@ public class CreateFeatureValidatorImpl implements CreateFeatureValidator {
 		for (Model model : user.getModels())
 			if (model.getModelId() == createFeatureDto.getModelId())
 				return true;
-
-		return false;
+		
+		throw new IllegalAccessError();
 	}
 }

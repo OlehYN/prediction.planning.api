@@ -1,16 +1,24 @@
 package com.course.work.prediction.planning.api.dto;
 
+import java.util.Date;
+
 import com.course.work.prediction.planning.api.entity.Model;
 
 public class ModelInfoDto {
 	private Long id;
 	private String name;
 	private Integer examplesQuantity;
+	private Date creationDate;
 
 	public ModelInfoDto(Model model) {
 		id = model.getModelId();
 		name = model.getName();
-		examplesQuantity = model.getExamples().size();
+
+		if (model.getExamples() != null)
+			examplesQuantity = model.getExamples().size();
+		else
+			examplesQuantity = 0;
+		creationDate = model.getCreationDate();
 	}
 
 	public ModelInfoDto(Long id, String name, Integer examplesQuantity) {
@@ -44,9 +52,18 @@ public class ModelInfoDto {
 		this.examplesQuantity = examplesQuantity;
 	}
 
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
 	@Override
 	public String toString() {
-		return "ModelInfoDto [id=" + id + ", name=" + name + ", examplesQuantity=" + examplesQuantity + "]";
+		return "ModelInfoDto [id=" + id + ", name=" + name + ", examplesQuantity=" + examplesQuantity
+				+ ", creationDate=" + creationDate + "]";
 	}
 
 }

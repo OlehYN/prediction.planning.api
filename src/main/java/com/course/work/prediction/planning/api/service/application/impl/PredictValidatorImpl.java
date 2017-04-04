@@ -34,7 +34,7 @@ public class PredictValidatorImpl implements PredictValidator{
 		Model model = modelService.read(modelId);
 
 		if (user.getUserId() != model.getUser().getUserId())
-			return false;
+			throw new IllegalAccessError();
 
 		List<Feature> features = model.getFeatures();
 

@@ -8,13 +8,16 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.course.work.prediction.planning.api.config.TokenInfo;
 import com.course.work.prediction.planning.api.dto.AddExampleDto;
 import com.course.work.prediction.planning.api.dto.CreateFeatureDto;
+import com.course.work.prediction.planning.api.dto.ErrorDto;
 import com.course.work.prediction.planning.api.dto.ExampleDto;
 import com.course.work.prediction.planning.api.dto.FeatureDto;
 import com.course.work.prediction.planning.api.dto.ModelInfoDto;
@@ -113,10 +116,11 @@ public class FreeUserController {
 	@RequestMapping("/createModel")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<Long> createModel(String name, String token) throws IOException {
+	public SuccessWrapper<ModelInfoDto> createModel(String name, String token) throws IOException {
 		if (!createModelValidator.isValid(name, token))
 			throw new IllegalArgumentException("Such name already exists");
-		return new SuccessWrapper<Long>(modelService.create(name, tokens.get(token).getUserId()).getModelId());
+		return new SuccessWrapper<ModelInfoDto>(
+				new ModelInfoDto(modelService.create(name, tokens.get(token).getUserId())));
 	}
 
 	@RequestMapping("/renameFeature")
@@ -169,10 +173,10 @@ public class FreeUserController {
 	@RequestMapping("/addExample")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<Long> addExample(AddExampleDto exampleDto, String token) {
+	public SuccessWrapper<ExampleDto> addExample(AddExampleDto exampleDto, String token) {
 		if (addExampleValidator.isValid(exampleDto, token))
 			throw new IllegalArgumentException("Invalid data");
-		return new SuccessWrapper<Long>(exampleService.create(exampleDto).getExampleId());
+		return new SuccessWrapper<ExampleDto>(new ExampleDto(exampleService.create(exampleDto)));
 	}
 
 	@RequestMapping("/removeExample")
@@ -201,5 +205,33 @@ public class FreeUserController {
 
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Integer>(predictModelService.predict(instances, modelId));
+	}
+	
+	@ExceptionHandler(IllegalAccessError.class)
+	@ResponseBody
+	public ErrorDto handleIllegalAccessError() {
+		return new ErrorDto("Illegal access!", HttpStatus.UNAUTHORIZED.value());
+
+	}
+	
+	@ExceptionHandler(IllegalArgumentException.class)
+	@ResponseBody
+	public ErrorDto handleIllegalArgumentError() {
+		return new ErrorDto("Please, refresh the page and check your data!", HttpStatus.CONFLICT.value());
+
+	}
+	
+	@ExceptionHandler(IOException.class)
+	@ResponseBody
+	public ErrorDto handleIOException() {
+		return new ErrorDto("Prediction server is currently unavailable! ", HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+	}
+	
+	@ExceptionHandler(Exception.class)
+	@ResponseBody
+	public ErrorDto handleGeneralInfo() {
+		return new ErrorDto("Server currently unavailable! ", HttpStatus.INTERNAL_SERVER_ERROR.value());
+
 	}
 }
