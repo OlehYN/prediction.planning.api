@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -107,7 +108,7 @@ public class FreeUserController {
 	@RequestMapping("/createFeature")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<Long> createFeature(CreateFeatureDto createFeatureDto, String token) {
+	public SuccessWrapper<Long> createFeature(@RequestBody CreateFeatureDto createFeatureDto, String token) {
 		if (!createFeatureValidator.isValid(createFeatureDto, token))
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Long>(featureService.createFeature(createFeatureDto));
@@ -137,7 +138,7 @@ public class FreeUserController {
 	@RequestMapping("/addFeatureValue")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<Boolean> addFeatureValue(Long featureId, List<String> featureValues, String token) {
+	public SuccessWrapper<Boolean> addFeatureValue(Long featureId, @RequestBody List<String> featureValues, String token) {
 		if (addFeatureListValueValidator.isValid(featureId, token, featureValues))
 			throw new IllegalArgumentException("Invalid data");
 
@@ -173,7 +174,7 @@ public class FreeUserController {
 	@RequestMapping("/addExample")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<ExampleDto> addExample(AddExampleDto exampleDto, String token) {
+	public SuccessWrapper<ExampleDto> addExample(@RequestBody AddExampleDto exampleDto, String token) {
 		if (addExampleValidator.isValid(exampleDto, token))
 			throw new IllegalArgumentException("Invalid data");
 		return new SuccessWrapper<ExampleDto>(new ExampleDto(exampleService.create(exampleDto)));
@@ -198,7 +199,7 @@ public class FreeUserController {
 
 	@RequestMapping("/predict")
 	@ResponseBody
-	public SuccessWrapper<Integer> predict(Long modelId, List<PredictExampleInstanceDto> instances, String token)
+	public SuccessWrapper<Integer> predict(Long modelId, @RequestBody List<PredictExampleInstanceDto> instances, String token)
 			throws IOException {
 		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId()
 				|| !predictValidator.isValid(instances, modelId, token))
