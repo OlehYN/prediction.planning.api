@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.course.work.prediction.planning.api.config.TokenInfo;
 import com.course.work.prediction.planning.api.entity.Feature;
+import com.course.work.prediction.planning.api.entity.FeatureListValue;
 import com.course.work.prediction.planning.api.entity.User;
 import com.course.work.prediction.planning.api.service.application.AddFeatureListValueValidator;
 import com.course.work.prediction.planning.api.service.domain.FeatureService;
@@ -41,7 +42,14 @@ public class AddFeatureListValueValidatorImpl implements AddFeatureListValueVali
 			if (name == null || name.length() == 0 || name.length() > 100)
 				return false;
 
-		return false;
+		List<FeatureListValue> listValues = feature.getFeatureListValues();
+
+		for (FeatureListValue featureListValue : listValues)
+			for (String value : values)
+				if (featureListValue.getValue().equals(value))
+					return false;
+
+		return true;
 	}
 
 }

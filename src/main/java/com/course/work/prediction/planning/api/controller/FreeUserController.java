@@ -128,7 +128,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> renameFeature(Long featureId, String newName, String token) {
-		if (renameFeatureValidator.isValid(token, featureId, newName))
+		if (!renameFeatureValidator.isValid(token, featureId, newName))
 			throw new IllegalArgumentException("Invalid data");
 
 		featureService.rename(featureId, newName);
@@ -139,7 +139,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> addFeatureValue(Long featureId, @RequestBody List<String> featureValues, String token) {
-		if (addFeatureListValueValidator.isValid(featureId, token, featureValues))
+		if (!addFeatureListValueValidator.isValid(featureId, token, featureValues))
 			throw new IllegalArgumentException("Invalid data");
 
 		featureService.addFeatureValues(featureId, featureValues);
@@ -175,7 +175,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<ExampleDto> addExample(@RequestBody AddExampleDto exampleDto, String token) {
-		if (addExampleValidator.isValid(exampleDto, token))
+		if (!addExampleValidator.isValid(exampleDto, token))
 			throw new IllegalArgumentException("Invalid data");
 		return new SuccessWrapper<ExampleDto>(new ExampleDto(exampleService.create(exampleDto)));
 	}
