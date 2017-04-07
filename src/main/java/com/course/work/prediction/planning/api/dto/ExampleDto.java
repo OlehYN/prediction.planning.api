@@ -9,12 +9,14 @@ import com.course.work.prediction.planning.api.entity.Example;
 public class ExampleDto {
 	private String outputLabel;
 	private Date creationDate;
+	private Long id;
 
 	private List<ExampleInstanceDto> exampleInstances;
 
 	public ExampleDto(Example example) {
 		this.outputLabel = example.getOutputLabel().toString();
 		this.creationDate = example.getCreationDate();
+		this.id = example.getExampleId();
 
 		exampleInstances = example.getExampleInstances().stream().map(ExampleInstanceDto::new)
 				.collect(Collectors.toList());
@@ -44,10 +46,18 @@ public class ExampleDto {
 		this.exampleInstances = exampleInstances;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "ExampleDto [outputLabel=" + outputLabel + ", creationDate=" + creationDate + ", exampleInstances="
-				+ exampleInstances + "]";
+		return "ExampleDto [outputLabel=" + outputLabel + ", creationDate=" + creationDate + ", id=" + id
+				+ ", exampleInstances=" + exampleInstances + "]";
 	}
 
 }
