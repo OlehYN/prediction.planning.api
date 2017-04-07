@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -79,12 +81,15 @@ public class FreeUserController {
 
 	@Autowired
 	private PredictValidator predictValidator;
+	
+	public static final Log log = LogFactory.getLog(FreeUserController.class);
 
 	@RequestMapping("/list")
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<List<ModelInfoDto>> getModels(String token) {
 		Long userId = tokens.get(token).getUserId();
+		log.info("/list: userId= " + userId);
 		return new SuccessWrapper<List<ModelInfoDto>>(
 				userService.read(userId).getModels().stream().map(ModelInfoDto::new).collect(Collectors.toList()));
 	}
@@ -94,6 +99,7 @@ public class FreeUserController {
 	@Transactional
 	public SuccessWrapper<List<FeatureDto>> getFeatures(String token, Long modelId) {
 		Long currentUserId = tokens.get(token).getUserId();
+		log.info("/features: userId= " + currentUserId + " modelId= " + modelId);
 
 		Model currentModel = modelService.read(modelId);
 		Long expectedUserId = currentModel.getUser().getUserId();
@@ -109,6 +115,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Long> createFeature(@RequestBody CreateFeatureDto createFeatureDto, String token) {
+		log.info("/createFeature: userId= " + tokens.get(token).getUserId() + " createFeatureDto= " + createFeatureDto);
 		if (!createFeatureValidator.isValid(createFeatureDto, token))
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Long>(featureService.createFeature(createFeatureDto));
@@ -118,6 +125,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<ModelInfoDto> createModel(String name, String token) throws IOException {
+		log.info("/createModel: userId= " + tokens.get(token).getUserId() + " name= " + name);
 		if (!createModelValidator.isValid(name, token))
 			throw new IllegalArgumentException("Such name already exists");
 		return new SuccessWrapper<ModelInfoDto>(
@@ -128,6 +136,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> renameFeature(Long featureId, String newName, String token) {
+		log.info("/renameFeature: userId= " + tokens.get(token).getUserId() + " newName= " + newName + " featureId= " + featureId);
 		if (!renameFeatureValidator.isValid(token, featureId, newName))
 			throw new IllegalArgumentException("Invalid data");
 
@@ -139,6 +148,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> addFeatureValue(Long featureId, @RequestBody List<String> featureValues, String token) {
+		log.info("/addFeatureValue: userId= " + tokens.get(token).getUserId() + " featureValues= " + featureValues + " featureId= " + featureId);
 		if (!addFeatureListValueValidator.isValid(featureId, token, featureValues))
 			throw new IllegalArgumentException("Invalid data");
 
@@ -150,6 +160,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> deleteModel(Long modelId, String token) throws IOException {
+		log.info("/deleteModel: userId= " + tokens.get(token).getUserId() + " modelId= " + modelId);
 		Model model = modelService.read(modelId);
 
 		if (model.getUser().getUserId() != tokens.get(token).getUserId())
@@ -162,6 +173,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<List<ExampleDto>> getExamples(Long modelId, String token) {
+		log.info("/examples: userId= " + tokens.get(token).getUserId() + " modelId= " + modelId);
 		Model model = modelService.read(modelId);
 
 		if (model.getUser().getUserId() != tokens.get(token).getUserId())
@@ -175,6 +187,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<ExampleDto> addExample(@RequestBody AddExampleDto exampleDto, String token) {
+		log.info("/addExample: userId= " + tokens.get(token).getUserId() + " exampleDto= " + exampleDto);
 		if (!addExampleValidator.isValid(exampleDto, token))
 			throw new IllegalArgumentException("Invalid data");
 		return new SuccessWrapper<ExampleDto>(new ExampleDto(exampleService.create(exampleDto)));
@@ -184,6 +197,7 @@ public class FreeUserController {
 	@ResponseBody
 	@Transactional
 	public SuccessWrapper<Boolean> removeExample(Long id, String token) {
+		log.info("/removeExample: userId= " + tokens.get(token).getUserId() + " id= " + id);
 		if (exampleService.read(id).getExampleModel().getUser().getUserId() != tokens.get(token).getUserId())
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Boolean>(exampleService.delete(id));
@@ -192,6 +206,7 @@ public class FreeUserController {
 	@RequestMapping("/updateModel")
 	@ResponseBody
 	public SuccessWrapper<Boolean> updateModel(Long modelId, String token) throws IOException {
+		log.info("/updateModel: userId= " + tokens.get(token).getUserId() + " modelId= " + modelId);
 		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId())
 			throw new IllegalAccessError("Illegal access!");
 		return new SuccessWrapper<Boolean>(updateModelService.updateModel(modelId));
@@ -201,6 +216,7 @@ public class FreeUserController {
 	@ResponseBody
 	public SuccessWrapper<Integer> predict(Long modelId, @RequestBody List<PredictExampleInstanceDto> instances, String token)
 			throws IOException {
+		log.info("/predict: userId= " + tokens.get(token).getUserId() + " modelId= " + modelId + " instances= " + instances);
 		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId()
 				|| !predictValidator.isValid(instances, modelId, token))
 
