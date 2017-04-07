@@ -186,11 +186,12 @@ public class FreeUserController {
 	@RequestMapping("/addExample")
 	@ResponseBody
 	@Transactional
-	public SuccessWrapper<ExampleDto> addExample(@RequestBody AddExampleDto exampleDto, String token) {
+	public SuccessWrapper<Boolean> addExample(@RequestBody AddExampleDto exampleDto, String token) {
 		log.info("/addExample: userId= " + tokens.get(token).getUserId() + " exampleDto= " + exampleDto);
 		if (!addExampleValidator.isValid(exampleDto, token))
 			throw new IllegalArgumentException("Invalid data");
-		return new SuccessWrapper<ExampleDto>(new ExampleDto(exampleService.create(exampleDto)));
+		exampleService.create(exampleDto);
+		return new SuccessWrapper<Boolean>(true);
 	}
 
 	@RequestMapping("/removeExample")
