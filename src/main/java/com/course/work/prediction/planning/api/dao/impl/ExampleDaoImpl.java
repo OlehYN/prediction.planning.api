@@ -23,8 +23,8 @@ public class ExampleDaoImpl extends GenericDaoImpl<Example, Long> implements Exa
 	@Override
 	public List<Example> unusedExamples(Long modelId) {
 		return em.createQuery(
-				"select e from Example e where e.model.modelId = :modelId and e.usedInPredictionApi = true",
-				Example.class).setParameter("modelId", modelId).getResultList();
+				"select e from Example e where e.exampleModel.modelId = :exampleModel and e.usedInPredictionApi = true",
+				Example.class).setParameter("exampleModel", modelId).getResultList();
 	}
 
 }

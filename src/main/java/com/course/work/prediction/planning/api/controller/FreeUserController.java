@@ -180,7 +180,7 @@ public class FreeUserController {
 			throw new IllegalAccessError("Illegal access!");
 
 		return new SuccessWrapper<List<ExampleDto>>(
-				model.getExamples().stream().map(ExampleDto::new).collect(Collectors.toList()));
+				exampleService.unusedExamples(modelId).stream().map(ExampleDto::new).collect(Collectors.toList()));
 	}
 
 	@RequestMapping("/addExample")
@@ -227,28 +227,32 @@ public class FreeUserController {
 	
 	@ExceptionHandler(IllegalAccessError.class)
 	@ResponseBody
-	public ErrorDto handleIllegalAccessError() {
+	public ErrorDto handleIllegalAccessError(IllegalAccessError error) {
+		log.error(error.toString());
 		return new ErrorDto("Illegal access!", HttpStatus.UNAUTHORIZED.value());
 
 	}
 	
 	@ExceptionHandler(IllegalArgumentException.class)
 	@ResponseBody
-	public ErrorDto handleIllegalArgumentError() {
+	public ErrorDto handleIllegalArgumentError(IllegalArgumentException exception) {
+		log.error(exception.toString());
 		return new ErrorDto("Please, refresh the page and check your data!", HttpStatus.CONFLICT.value());
 
 	}
 	
 	@ExceptionHandler(IOException.class)
 	@ResponseBody
-	public ErrorDto handleIOException() {
+	public ErrorDto handleIOException(IOException exception) {
+		log.error(exception.toString());
 		return new ErrorDto("Prediction server is currently unavailable! ", HttpStatus.INTERNAL_SERVER_ERROR.value());
 
 	}
 	
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
-	public ErrorDto handleGeneralInfo() {
+	public ErrorDto handleGeneralInfo(Exception exception) {
+		log.error(exception.toString());
 		return new ErrorDto("Server currently unavailable! ", HttpStatus.INTERNAL_SERVER_ERROR.value());
 
 	}
