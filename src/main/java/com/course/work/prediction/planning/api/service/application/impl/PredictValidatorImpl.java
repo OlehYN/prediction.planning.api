@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.course.work.prediction.planning.api.config.TokenInfo;
-import com.course.work.prediction.planning.api.dto.PredictExampleInstanceDto;
+import com.course.work.prediction.planning.api.dto.AddExampleInstanceDto;
 import com.course.work.prediction.planning.api.entity.Feature;
 import com.course.work.prediction.planning.api.entity.FeatureListValue;
 import com.course.work.prediction.planning.api.entity.Model;
@@ -29,7 +29,7 @@ public class PredictValidatorImpl implements PredictValidator{
 	private UserService userService;
 
 	@Override
-	public boolean isValid(List<PredictExampleInstanceDto> instances, Long modelId, String token) {
+	public boolean isValid(List<AddExampleInstanceDto> instances, Long modelId, String token) {
 		User user = userService.read(tokens.get(token).getUserId());
 		Model model = modelService.read(modelId);
 
@@ -44,7 +44,7 @@ public class PredictValidatorImpl implements PredictValidator{
 			return false;
 
 		outer: for (Feature feature : features)
-			for (PredictExampleInstanceDto exampleInstance : instances)
+			for (AddExampleInstanceDto exampleInstance : instances)
 				if (exampleInstance.getId() == feature.getFeatureId()) {
 					++count;
 

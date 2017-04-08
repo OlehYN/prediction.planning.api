@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.course.work.prediction.planning.api.config.TokenInfo;
 import com.course.work.prediction.planning.api.dto.AddExampleDto;
+import com.course.work.prediction.planning.api.dto.AddExampleInstanceDto;
 import com.course.work.prediction.planning.api.dto.CreateFeatureDto;
 import com.course.work.prediction.planning.api.dto.ErrorDto;
 import com.course.work.prediction.planning.api.dto.ExampleDto;
 import com.course.work.prediction.planning.api.dto.FeatureDto;
 import com.course.work.prediction.planning.api.dto.ModelInfoDto;
-import com.course.work.prediction.planning.api.dto.PredictExampleInstanceDto;
 import com.course.work.prediction.planning.api.dto.SuccessWrapper;
 import com.course.work.prediction.planning.api.entity.Model;
 import com.course.work.prediction.planning.api.service.application.AddExampleValidator;
@@ -215,7 +215,7 @@ public class FreeUserController {
 
 	@RequestMapping("/predict")
 	@ResponseBody
-	public SuccessWrapper<Integer> predict(Long modelId, @RequestBody List<PredictExampleInstanceDto> instances, String token)
+	public SuccessWrapper<Integer> predict(Long modelId, @RequestBody List<AddExampleInstanceDto> instances, String token)
 			throws IOException {
 		log.info("/predict: userId= " + tokens.get(token).getUserId() + " modelId= " + modelId + " instances= " + instances);
 		if (modelService.read(modelId).getUser().getUserId() != tokens.get(token).getUserId()
@@ -252,7 +252,7 @@ public class FreeUserController {
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public ErrorDto handleGeneralInfo(Exception exception) {
-		log.error(exception.toString());
+		exception.printStackTrace();
 		return new ErrorDto("Server currently unavailable! ", HttpStatus.INTERNAL_SERVER_ERROR.value());
 
 	}

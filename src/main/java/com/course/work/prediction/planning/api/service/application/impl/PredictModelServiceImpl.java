@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.course.work.prediction.planning.api.dto.PredictExampleInstanceDto;
+import com.course.work.prediction.planning.api.controller.FreeUserController;
+import com.course.work.prediction.planning.api.dto.AddExampleInstanceDto;
 import com.course.work.prediction.planning.api.entity.Feature;
 import com.course.work.prediction.planning.api.entity.Model;
 import com.course.work.prediction.planning.api.service.application.PredictModelService;
@@ -27,17 +30,19 @@ public class PredictModelServiceImpl implements PredictModelService {
 
 	@Autowired
 	private GooglePredictionApi googlePredictionApi;
+	
+	public static final Log log = LogFactory.getLog(FreeUserController.class);
 
 	@Autowired
 	private String projectName;
 
 	@Override
-	public Integer predict(List<PredictExampleInstanceDto> instances, Long modelId) throws IOException {
+	public Integer predict(List<AddExampleInstanceDto> instances, Long modelId) throws IOException {
 		Model model = modelService.read(modelId);
 		List<Object> exampleFeatures = new ArrayList<>();
 
 		outer: for (Feature feature : model.getFeatures()) {
-			for (PredictExampleInstanceDto predictExampleInstance : instances)
+			for (AddExampleInstanceDto predictExampleInstance : instances)
 				if (predictExampleInstance.getId() == feature.getFeatureId()) {
 					if (feature.isCategory())
 						exampleFeatures
@@ -52,8 +57,12 @@ public class PredictModelServiceImpl implements PredictModelService {
 			else
 				exampleFeatures.add(0D);
 		}
-		Output output = googlePredictionApi.predict(projectName, model.getName(), exampleFeatures);
-		return Double.valueOf(output.getOutputLabel()).intValue();
+		Output output = googlePredictionApi.predict(projectName, model.getUser().getLogin() + "#" + model.getName(),
+				exampleFeatures);
+		
+		log.info(output);
+		
+		return Double.valueOf(output.getOutputValue()).intValue();
 	}
 
 }
